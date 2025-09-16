@@ -87,6 +87,7 @@ df_bellevue['gender'] = df_bellevue['gender'].replace({
 })
 df_bellevue['gender']  = df_bellevue['gender'].fillna('unknown')
 
+# Task 1
 def task_1():
     """ Task 1: Return a list of column names from the df_bellevue dataset,
     sorted by the number of missing values (least missing first)
@@ -105,6 +106,7 @@ def task_1():
     return sorted_columns
 print(task_1())  # Example usage
 
+# Task 2
 def task_2():
     """ 
     Task 2: Return a DataFrame with the year and the total number of admissions per year.
@@ -132,7 +134,7 @@ def task_2():
 # Example usage
 print(task_2().head())
 
-
+# Task 3
 def task_3():
     """ 
     Task 3: Return a Pandas Series with gender as the index and the
@@ -188,6 +190,7 @@ def task_3():
 # Test the function
 print(task_3())
 
+# Task 4
 import string
 
 def task_4():
