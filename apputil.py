@@ -133,4 +133,97 @@ def task_2():
 print(task_2().head())
 
 
+def task_3():
+    """ 
+    Task 3: Return a Pandas Series with gender as the index and the
+    average age for each gender as the values.
+    
+    Returns
+    -------
+    pd.Series
+        A Series where:
+        - index = gender categories
+        - values = average age for each gender
+    """
+    # Make a copy to avoid modifying the original dataset
+    df_copy = df_bellevue.copy()
+
+    #chack if 'age' column exists
+    if 'age' not in df_copy.columns:
+        print("Error: 'age' column is missing.")
+        return None
+    
+    # Ensure 'age' is numeric
+    df_copy['age'] = pd.to_numeric(df_copy['age'], errors='coerce')
+
+    # Clean and replace or missing values with 'unknown'
+    df_copy['gender'] = df_copy['gender'].str.strip().str.lower()
+    df_copy['gender'] = df_copy['gender'].replace({
+        'm': 'male',
+        'w': 'female',
+        '?': 'unknown'
+    })
+    df_copy['gender'] = df_copy['gender'].fillna('unknown')
+
+    # Drop rows with missing 'age
+    df_copy = df_copy.dropna(subset=['age'])
+    
+    # Filter out invalid gender values
+    valid_genders = ['male', 'female', 'unknown']
+    df_copy = df_copy[df_copy['gender'].isin(valid_genders)]
+
+    # Check if the DataFrame is empty after cleaning
+    if df_copy.empty:
+        print("No valid data to calculate average age.")
+        return None
+
+    # Group by gender and calculate average age
+    average_age = df_copy.groupby('gender')['age'].mean()
+
+    # Ensure all genders appear in the index, even if missing
+    average_age = average_age.reindex(valid_genders)
+
+    return average_age
+
+# Test the function
+print(task_3())
+
+import string
+
+def task_4():
+    """ 
+    Task 4:Return a list of the 5 most common professions
+    in order of prevalence (most common first).
+    
+    Returns
+    -------
+    list
+        A list of the top 5 most frequent professions.
+    """
+
+    # Make a copy to avoid modifying the original dataset
+    df_copy = df_bellevue.copy()
+
+    # Check if 'profession' column exists
+    if 'profession' not in df_copy.columns:
+        print("Error: 'profession' column is missing.")
+        return []
+    
+    # Clean profession column: lowercase, strip spaces, remove punctuation
+    df_copy['profession'] = df_copy['profession'].str.lower().str.strip()
+    df_copy['profession'] = df_copy['profession'].str.replace(f"[{string.punctuation}]", "", regex=True)
+
+    # Drop missing values
+    missing_professions = df_copy['profession'].isnull().sum()
+    if missing_professions > 0:
+        print(f"Warning: {missing_professions} records have missing 'profession' values.")
+    df_copy = df_copy.dropna(subset=['profession'])
+
+    # Count frequencies and get the top 5
+    top_professions = df_copy['profession'].value_counts().head(5).index.tolist()
+
+    return top_professions
+
+# Test the function
+print(task_4())  # Example usage
 
