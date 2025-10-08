@@ -72,6 +72,7 @@ def to_binary(n):
 
 
 
+
 # Exercise 3
 import pandas as pd
 
